@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Choice Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .question-container {
+      margin: 20px;
+    }
+    .question {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .answer-choice {
+      margin: 5px 0;
+    }
+    .submit-btn {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="quiz-container"></div>
+  <button id="submit-btn" class="submit-btn">Submit Test</button>
+  <div id="result"></div>
+
+  <script src="quiz.js"></script>
+</body>
+</html>
+<script>
+    // Array of question objects
+const questions = [
+  {
+    question: "What is the capital of France?",
+    choices: ["Paris", "London", "Berlin", "Madrid"],
+    answer: "Paris"
+  },
+  {
+    question: "Which programming language is used for web development?",
+    choices: ["Python", "JavaScript", "Java", "C#"],
+    answer: "JavaScript"
+  },
+  {
+    question: "Who developed the theory of relativity?",
+    choices: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
+    answer: "Albert Einstein"
+  },
+  {
+    question: "What is the largest planet in our solar system?",
+    choices: ["Earth", "Mars", "Jupiter", "Saturn"],
+    answer: "Jupiter"
+  }
+];
+
+// Function to generate questions dynamically
+function generateQuestions() {
+  const quizContainer = document.getElementById("quiz-container");
+  questions.forEach((question, index) => {
+    // Create question container
+    const questionElement = document.createElement("div");
+    questionElement.classList.add("question-container");
+
+    // Create question text
+    const questionText = document.createElement("p");
+    questionText.classList.add("question");
+    questionText.innerText = `${index + 1}. ${question.question}`;
+    questionElement.appendChild(questionText);
+
+    // Create answer choices
+    question.choices.forEach(choice => {
+      const answerChoice = document.createElement("label");
+      const radioBtn = document.createElement("input");
+      radioBtn.type = "radio";
+      radioBtn.name = `question${index}`; // Unique name for each question's answers
+      radioBtn.value = choice;
+      answerChoice.classList.add("answer-choice");
+      answerChoice.appendChild(radioBtn);
+      answerChoice.appendChild(document.createTextNode(choice));
+      questionElement.appendChild(answerChoice);
+      questionElement.appendChild(document.createElement("br"));
+    });
+
+    quizContainer.appendChild(questionElement);
+  });
+}
+
+// Function to handle form submission and score calculation
+function submitTest() {
+  let score = 0;
+  
+  // Iterate over each question to check selected answers
+  questions.forEach((question, index) => {
+    const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
+    
+    // Check if an answer was selected and if it matches the correct answer
+    if (selectedAnswer && selectedAnswer.value === question.answer) {
+      score++;
+    }
+  });
+
+  // Display the score result
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = `You scored ${score} out of ${questions.length}.`;
+}
+
+// Generate the questions when the page loads
+window.onload = () => {
+  generateQuestions();
+  
+  // Add event listener to submit button
+  const submitButton = document.getElementById("submit-btn");
+  submitButton.addEventListener("click", submitTest);
+};
+
+</script>
